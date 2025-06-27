@@ -1,5 +1,4 @@
 "use client";
-
 import { signup } from "@/app/auth/actions";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -40,17 +39,24 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Create your account
-          </h2>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-light text-slate-900 mb-2">
+            Create account
+          </h1>
+          <p className="text-slate-600 text-sm">
+            Join us today and get started
+          </p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="email" className="sr-only">
+
+        <div className="bg-white/70 backdrop-blur-sm rounded-sm shadow-xl border border-white/20 p-8">
+          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+            <div className="space-y-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-slate-700"
+              >
                 Email address
               </label>
               <input
@@ -58,21 +64,25 @@ export default function SignupPage() {
                 id="email"
                 type="email"
                 autoComplete="email"
-                className={`appearance-none rounded-none relative block w-full px-3 py-2 border placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm ${
+                className={`w-full px-4 py-3 rounded-xl border bg-white/50 text-slate-900 placeholder-slate-400 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 ${
                   errors.email
-                    ? "border-red-300 focus:border-red-500 focus:ring-red-500"
-                    : "border-gray-300"
+                    ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
+                    : "border-slate-200 hover:border-slate-300"
                 }`}
-                placeholder="Email address"
+                placeholder="Enter your email"
               />
               {errors.email && (
-                <p className="mt-1 text-sm text-red-600">
+                <p className="text-red-500 text-sm animate-in slide-in-from-top-1 duration-200">
                   {errors.email.message}
                 </p>
               )}
             </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
+
+            <div className="space-y-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-slate-700"
+              >
                 Password
               </label>
               <input
@@ -80,44 +90,69 @@ export default function SignupPage() {
                 id="password"
                 type="password"
                 autoComplete="new-password"
-                className={`appearance-none rounded-none relative block w-full px-3 py-2 border placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm ${
+                className={`w-full px-4 py-3 rounded-xl border bg-white/50 text-slate-900 placeholder-slate-400 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 ${
                   errors.password
-                    ? "border-red-300 focus:border-red-500 focus:ring-red-500"
-                    : "border-gray-300"
+                    ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
+                    : "border-slate-200 hover:border-slate-300"
                 }`}
-                placeholder="Password"
+                placeholder="Create a password"
               />
               {errors.password && (
-                <p className="mt-1 text-sm text-red-600">
+                <p className="text-red-500 text-sm animate-in slide-in-from-top-1 duration-200">
                   {errors.password.message}
                 </p>
               )}
             </div>
-          </div>
 
-          {error && (
-            <div className="text-red-600 text-sm text-center">{error}</div>
-          )}
+            {error && (
+              <div className="p-4 rounded-xl bg-red-50 border border-red-200 animate-in slide-in-from-top-2 duration-300">
+                <p className="text-red-700 text-sm text-center">{error}</p>
+              </div>
+            )}
 
-          <div>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3 px-4 bg-slate-900 text-white rounded-xl font-medium transition-all duration-200 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500/20 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transform hover:scale-[0.99] active:scale-[0.97]"
             >
-              {isSubmitting ? "Creating account..." : "Sign up"}
+              {isSubmitting ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                      fill="none"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    />
+                  </svg>
+                  Creating account...
+                </span>
+              ) : (
+                "Create account"
+              )}
             </button>
-          </div>
+          </form>
+        </div>
 
-          <div className="text-center">
+        <div className="text-center mt-6">
+          <p className="text-slate-600 text-sm">
+            Already have an account?{" "}
             <Link
               href="/login"
-              className="text-indigo-600 hover:text-indigo-500"
+              className="text-slate-900 font-medium hover:text-slate-700 transition-colors duration-200"
             >
-              Already have an account? Sign in
+              Sign in
             </Link>
-          </div>
-        </form>
+          </p>
+        </div>
       </div>
     </div>
   );
