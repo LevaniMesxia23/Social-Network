@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { createServerSupabase } from "@/utils/supabase/server";
+import { createServerSupabaseReadOnly } from "@/utils/supabase/server";
 
 interface RouteProtectionProps {
   children: React.ReactNode;
@@ -12,11 +12,10 @@ export default async function RouteProtection({
   redirectTo = "/",
   protectFrom = "authenticated",
 }: RouteProtectionProps) {
-  const supabase = await createServerSupabase();
+  const supabase = await createServerSupabaseReadOnly();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
 
   if (protectFrom === "authenticated" && user) {
     redirect(redirectTo);

@@ -1,10 +1,10 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { createServerSupabase } from "@/utils/supabase/server";
+import { createServerSupabaseReadOnly } from "@/utils/supabase/server";
 
 async function Header() {
-  const supabase = await createServerSupabase();
+  const supabase = await createServerSupabaseReadOnly();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -26,8 +26,7 @@ async function Header() {
           </Link>
 
           <div className="flex items-center space-x-4">
-            {user ? (
-              // Show only sign out for logged-in users
+            {user && (
               <form action="/auth/signout" method="post">
                 <button
                   type="submit"
@@ -36,22 +35,6 @@ async function Header() {
                   Sign out
                 </button>
               </form>
-            ) : (
-              // Show sign in and sign up for logged-out users
-              <>
-                <Link
-                  href="/login"
-                  className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm font-medium"
-                >
-                  Sign in
-                </Link>
-                <Link
-                  href="/signup"
-                  className="bg-slate-900 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-slate-800 hover:scale-105 active:scale-95"
-                >
-                  Sign up
-                </Link>
-              </>
             )}
           </div>
         </div>
