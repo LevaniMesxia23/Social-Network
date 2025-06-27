@@ -2,6 +2,8 @@ import React from "react";
 import Link from "next/link";
 import { Card, StatCard } from "../components";
 import { stats } from "../data";
+import { getPosts } from "@/services/posts/apiPosts";
+import { DrawerDemo } from "../components/ui/Drawer";
 
 const recentPosts = [
   {
@@ -21,7 +23,9 @@ const recentPosts = [
   },
 ];
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const posts = await getPosts();
+  console.log(posts);
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-8">
@@ -81,9 +85,7 @@ export default function DashboardPage() {
               Quick Actions
             </h2>
             <div className="space-y-3">
-              <button className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200">
-                Create New Post
-              </button>
+              <DrawerDemo />
               <button className="w-full bg-gray-100 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-200 transition-colors duration-200">
                 View Analytics
               </button>

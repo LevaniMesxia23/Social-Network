@@ -1,7 +1,10 @@
+import { getComments } from "@/services/comments/apiComments";
+import { getPosts } from "@/services/posts/apiPosts";
 import { createServerSupabaseReadOnly } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+import FeedPage from "./feed/page";
 
-export default async function Home() {
+export default async function HomePage() {
   const supabase = await createServerSupabaseReadOnly();
   const {
     data: { user },
@@ -11,5 +14,5 @@ export default async function Home() {
     redirect("/login");
   }
 
-  return <div className="bg-gray-50">feed</div>;
+  return <FeedPage />;
 }
