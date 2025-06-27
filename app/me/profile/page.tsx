@@ -1,15 +1,5 @@
 import React from "react";
 import Link from "next/link";
-import { Card } from "../components";
-
-const userInfo = {
-  name: "John Doe",
-  username: "@johndoe",
-  email: "john.doe@example.com",
-  memberSince: "Jan 2024",
-  posts: "24",
-  followers: "456",
-};
 
 export default function ProfilePage() {
   return (
@@ -42,9 +32,7 @@ export default function ProfilePage() {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Profile Settings
           </h1>
-          <p className="text-gray-600">
-            Manage your account preferences
-          </p>
+          <p className="text-gray-600">Manage your account preferences</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

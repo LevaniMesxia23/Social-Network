@@ -1,13 +1,17 @@
-import React from 'react'
-import Header from '../layouts/Header'
+import React from "react";
+import Header from "../layouts/Header";
+import RouteProtection from "@/app/_components/RouteProtection";
 
-function layout({ children }: { children: React.ReactNode }) {
+export default async function MeLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <div>
-      <Header />
-      {children}
-    </div>
-  )
+    <RouteProtection protectFrom="unauthenticated">
+      <div>
+        {children}
+      </div>
+    </RouteProtection>
+  );
 }
-
-export default layout
