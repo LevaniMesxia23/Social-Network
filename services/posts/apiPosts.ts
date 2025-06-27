@@ -1,4 +1,5 @@
 import { createServerSupabaseReadOnly } from "@/utils/supabase/server";
+import { deleteComments } from "@/services/comments/apiComments";
 
 export async function getPosts() {
   const supabase = await createServerSupabaseReadOnly();
@@ -28,4 +29,19 @@ export async function createPost(post: any) {
     throw error;
   }
   return { data, error };
+}
+
+export async function deletePost(id: string) {
+  const supabase = await createServerSupabaseReadOnly();
+
+  try {
+    await deleteComments(id);
+    const { data, error } = await supabase.from("posts").delete().eq("id", id);
+    if (error) {
+      throw error;
+    }
+    return { data, error };
+  } catch (error) {
+    throw error;
+  }
 }
