@@ -1,3 +1,7 @@
+"use client";
+
+import Link from "next/link";
+
 interface Post {
   id: string;
   title: string;
@@ -13,16 +17,22 @@ interface Post {
 interface PostCardProps {
   post: Post;
   showCommentCount?: boolean;
+  isClickable?: boolean;
 }
 
 export default function PostCard({
   post,
   showCommentCount = true,
+  isClickable = true,
 }: PostCardProps) {
-  return (
+  const cardContent = (
     <article
       key={post.id}
-      className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md hover:border-slate-300 transition-all duration-200"
+      className={`bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden transition-all duration-200 ${
+        isClickable
+          ? "hover:shadow-md hover:border-slate-300 cursor-pointer"
+          : ""
+      }`}
     >
       {post.image && (
         <div className="relative w-full h-72 overflow-hidden bg-slate-50">
@@ -89,6 +99,7 @@ export default function PostCard({
               <button
                 className="flex items-center space-x-2 text-slate-500 hover:text-red-500 transition-colors duration-150 group"
                 aria-label={`Like post (${post.like || 0} likes)`}
+                onClick={(e) => e.stopPropagation()}
               >
                 <svg
                   className="w-5 h-5 group-hover:scale-110 transition-transform duration-150"
@@ -105,16 +116,9 @@ export default function PostCard({
                 <span className="text-sm font-medium">{post.like || 0}</span>
               </button>
 
-              <button
-                className="flex items-center space-x-2 text-slate-500 hover:text-blue-500 transition-colors duration-150 group"
-                aria-label={
-                  showCommentCount
-                    ? `View comments (${post.commentsCount || 0} comments)`
-                    : "View comments"
-                }
-              >
+              <div className="flex items-center space-x-2 text-slate-500">
                 <svg
-                  className="w-5 h-5 group-hover:scale-110 transition-transform duration-150"
+                  className="w-5 h-5"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                   aria-hidden="true"
@@ -128,12 +132,13 @@ export default function PostCard({
                 <span className="text-sm font-medium">
                   {showCommentCount ? post.commentsCount || 0 : "Comments"}
                 </span>
-              </button>
+              </div>
             </div>
 
             <button
               className="text-slate-400 hover:text-slate-600 transition-colors duration-150"
               aria-label="Share post"
+              onClick={(e) => e.stopPropagation()}
             >
               <svg
                 className="w-5 h-5"
@@ -149,4 +154,14 @@ export default function PostCard({
       </div>
     </article>
   );
+
+  if (isClickable) {
+    return (
+      <Link href={`/post/${post.id}`} className="block">
+        {cardContent}
+      </Link>
+    );
+  }
+
+  return cardContent;
 }

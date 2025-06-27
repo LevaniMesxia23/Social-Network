@@ -48,7 +48,10 @@ function AuthorPostsPage() {
                 commentsCount: comments?.length || 0,
               };
             } catch (error) {
-              console.error(`Error fetching comments for post ${post.id}:`, error);
+              console.error(
+                `Error fetching comments for post ${post.id}:`,
+                error
+              );
               return {
                 ...post,
                 commentsData: [],
@@ -126,7 +129,11 @@ function AuthorPostsPage() {
           <section className="space-y-8" aria-label="Your posts">
             {posts.map((post) => (
               <div key={post.id} className="relative">
-                <PostCard post={post} showCommentCount={true} />
+                <PostCard
+                  post={post}
+                  showCommentCount={true}
+                  isClickable={false}
+                />
                 <button
                   onClick={() => handleDeletePost(post.id)}
                   className="absolute top-4 right-4 bg-red-500 hover:bg-red-600 text-white p-2 rounded-full shadow-lg transition-colors duration-200"

@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 
-export default function ProfilePage() {
+export default async function ProfilePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 py-8">
@@ -39,24 +39,10 @@ export default function ProfilePage() {
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-md p-6">
               <div className="text-center">
-                <div className="w-32 h-32 bg-gray-300 rounded-full mx-auto mb-4 flex items-center justify-center">
-                  <svg
-                    className="w-16 h-16 text-gray-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                    />
-                  </svg>
-                </div>
-                <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors duration-200">
-                  Change Photo
-                </button>
+                {/* <h3 className="text-lg font-semibold text-gray-900">
+                  {userData[0].name}
+                </h3>
+                <p className="text-gray-600">{userData[0].email}</p> */}
               </div>
 
               <div className="mt-6 space-y-3">

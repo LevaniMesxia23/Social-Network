@@ -10,6 +10,19 @@ export async function getPosts() {
   return data;
 }
 
+export async function getSinglePost(id: string) {
+  const supabase = await createServerSupabaseReadOnly();
+  const { data, error } = await supabase
+    .from("posts")
+    .select("*")
+    .eq("id", id)
+    .single();
+  if (error) {
+    throw error;
+  }
+  return data;
+}
+
 export async function getAuthorPosts(name: string) {
   const supabase = await createServerSupabaseReadOnly();
   const { data, error } = await supabase
