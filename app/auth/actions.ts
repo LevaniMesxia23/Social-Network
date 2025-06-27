@@ -17,7 +17,7 @@ export async function login(formData: FormData) {
 
   if (error) {
     console.error("Login error:", error);
-    redirect("/login?error=Invalid credentials");
+    return { error: "Invalid email or password. Please try again." };
   }
 
   revalidatePath("/", "layout");
@@ -32,11 +32,27 @@ export async function signup(formData: FormData) {
     password: formData.get("password") as string,
   };
 
-  const { error } = await supabase.auth.signUp(data);
+  const { data: authData, error } = await supabase.auth.signUp(data);
 
   if (error) {
     console.error("Signup error:", error);
-    redirect("/signup?error=Signup failed");
+    return {
+      error: error.message || "Failed to create account. Please try again.",
+    };
+  }
+
+  if (authData.user) {
+    const { error: insertError } = await supabase
+      .from("users")
+      .insert([{ email: data.email }]);
+
+    if (insertError) {
+      console.error("Error inserting user data:", insertError);
+      return {
+        error:
+          "Account created but failed to save user data. Please contact support.",
+      };
+    }
   }
 
   revalidatePath("/", "layout");
