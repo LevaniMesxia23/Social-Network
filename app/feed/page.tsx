@@ -1,9 +1,10 @@
 import { getComments } from "@/services/comments/apiComments";
-import { getPosts } from "@/services/posts/apiPosts";
+import { getAuthorPosts, getPosts } from "@/services/posts/apiPosts";
 
 export default async function FeedPage() {
   const posts = await getPosts();
-
+  const authorPosts = await getAuthorPosts(posts[0].name);
+  
   const postsWithComments = await Promise.all(
     posts.map(async (post) => {
       try {
@@ -23,8 +24,6 @@ export default async function FeedPage() {
       }
     })
   );
-
-  console.log(posts);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -54,7 +53,7 @@ export default async function FeedPage() {
               <div className="space-y-2 text-sm text-gray-500">
                 <div className="flex items-center justify-between">
                   <span className="font-medium text-gray-700">
-                    {post.author}
+                    {post.name}
                   </span>
                   <span>
                     {new Date(post.created_at)

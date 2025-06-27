@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 
 import {
@@ -13,17 +13,42 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-
+import { createPost } from "@/services/posts/apiPosts";
+import { createClient } from "@/utils/supabase/client";
 
 export function DrawerDemo() {
-  const [title, setTitle] = React.useState("");
-  const [content, setContent] = React.useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [tags, setTags] = useState("");
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setUserId(user.id);
+      }
+      console.log(user);
+    };
+    getCurrentUser();
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ title, content });
+    const tagsArray = tags
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter((tag) => tag.length > 0);
+    createPost({
+      title,
+      description,
+      tags: tagsArray,
+      author: userId,
+    });
     setTitle("");
-    setContent("");
+    setDescription("");
+    setTags("");
   };
 
   return (
@@ -72,20 +97,39 @@ export function DrawerDemo() {
             </div>
             <div>
               <label
-                htmlFor="content"
+                htmlFor="description"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                Content
+                Description
               </label>
               <textarea
-                id="content"
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
+                id="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
                 placeholder="What's on your mind?"
                 rows={4}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 resize-none"
                 required
               />
+            </div>
+            <div>
+              <label
+                htmlFor="tags"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Tags
+              </label>
+              <input
+                id="tags"
+                type="text"
+                value={tags}
+                onChange={(e) => setTags(e.target.value)}
+                placeholder="Enter tags separated by commas..."
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Separate tags with commas (e.g., tech, programming, web)
+              </p>
             </div>
           </form>
           <DrawerFooter>

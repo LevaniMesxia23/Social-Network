@@ -22,6 +22,7 @@ export default function SignupPage() {
     setError(null);
     try {
       const formData = new FormData();
+      formData.append("name", data.name);
       formData.append("email", data.email);
       formData.append("password", data.password);
 
@@ -52,6 +53,32 @@ export default function SignupPage() {
 
         <div className="bg-white/70 backdrop-blur-sm rounded-sm shadow-xl border border-white/20 p-8">
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+            <div className="space-y-2">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-slate-700"
+              >
+                Name
+              </label>
+              <input
+                {...register("name")}
+                id="name"
+                type="text"
+                autoComplete="name"
+                className={`w-full px-4 py-3 rounded-xl border bg-white/50 text-slate-900 placeholder-slate-400 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 ${
+                  errors.name
+                    ? "border-red-300 focus:border-red-500 focus:ring-red-500/20"
+                    : "border-slate-200 hover:border-slate-300"
+                }`}
+                placeholder="Enter your name"
+              />
+              {errors.name && (
+                <p className="text-red-500 text-sm animate-in slide-in-from-top-1 duration-200">
+                  {errors.name.message}
+                </p>
+              )}
+            </div>
+
             <div className="space-y-2">
               <label
                 htmlFor="email"
