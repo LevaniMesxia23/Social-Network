@@ -48,7 +48,12 @@ export function DrawerDemo() {
     e.preventDefault();
     setError(null);
 
-    if (!title.trim() || !description.trim() || !uploadedImageUrl || !tags.trim()) {
+    if (
+      !title.trim() ||
+      !description.trim() ||
+      !uploadedImageUrl ||
+      !tags.trim()
+    ) {
       setError("Please fill in all required fields before publishing.");
       return;
     }
@@ -83,8 +88,21 @@ export function DrawerDemo() {
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <button className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200">
-          Create New Post
+        <button className="flex flex-col items-center p-4 text-center hover:bg-gray-50 rounded-lg transition-colors duration-200">
+          <svg
+            className="w-6 h-6 text-gray-600 mb-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+            />
+          </svg>
+          <span className="text-sm text-gray-700">Create Post</span>
         </button>
       </DrawerTrigger>
       <DrawerContent className="bg-white">
