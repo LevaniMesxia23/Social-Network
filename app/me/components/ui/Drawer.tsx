@@ -15,40 +15,69 @@ import {
 } from "@/components/ui/drawer";
 import { createPost } from "@/services/posts/apiPosts";
 import { createClient } from "@/utils/supabase/client";
+import { ImageUpload } from "@/app/me/components/ui/imageUpload";
 
 export function DrawerDemo() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [tags, setTags] = useState("");
-  const [userId, setUserId] = useState<string | null>(null);
+  const [name, setName] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const getCurrentUser = async () => {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        setUserId(user.id);
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user && user.identities) {
+        setName(user.identities[0]?.identity_data?.display_name || null);
       }
-      console.log(user);
     };
     getCurrentUser();
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleImageUpload = (filename: string | null) => {
+    setUploadedImageUrl(filename);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const tagsArray = tags
-      .split(",")
-      .map((tag) => tag.trim())
-      .filter((tag) => tag.length > 0);
-    createPost({
-      title,
-      description,
-      tags: tagsArray,
-      author: userId,
-    });
-    setTitle("");
-    setDescription("");
-    setTags("");
+    setError(null);
+
+    if (!title.trim() || !description.trim() || !uploadedImageUrl || !tags.trim()) {
+      setError("Please fill in all required fields before publishing.");
+      return;
+    }
+
+    try {
+      const tagsArray = tags
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter((tag) => tag.length > 0);
+
+      await createPost({
+        title,
+        description,
+        tags: tagsArray,
+        name: name,
+        image: uploadedImageUrl,
+      });
+
+      setTitle("");
+      setDescription("");
+      setTags("");
+      setSelectedImage(null);
+      setImagePreview(null);
+      setUploadedImageUrl(null);
+      setError(null);
+    } catch (error) {
+      console.error("Error creating post:", error);
+      setError("Failed to create post. Please try again.");
+    }
   };
 
   return (
@@ -78,6 +107,11 @@ export function DrawerDemo() {
             </div>
           </DrawerHeader>
           <form onSubmit={handleSubmit} className="p-4 space-y-4">
+            {error && (
+              <div className="p-3 rounded-lg bg-red-50 border border-red-200">
+                <p className="text-red-700 text-sm">{error}</p>
+              </div>
+            )}
             <div>
               <label
                 htmlFor="title"
@@ -112,6 +146,13 @@ export function DrawerDemo() {
                 required
               />
             </div>
+            <ImageUpload
+              onImageUpload={handleImageUpload}
+              selectedImage={selectedImage}
+              setSelectedImage={setSelectedImage}
+              imagePreview={imagePreview}
+              setImagePreview={setImagePreview}
+            />
             <div>
               <label
                 htmlFor="tags"

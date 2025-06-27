@@ -27,14 +27,21 @@ async function Header() {
 
           <div className="flex items-center space-x-4">
             {user && (
+              <> 
+              <Link href="/me">
+              <button className=" text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm font-medium">
+                Profile
+              </button>
+            </Link>
               <form action="/auth/signout" method="post">
                 <button
                   type="submit"
-                  className="text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm font-medium"
+                  className="bg-slate-100 px-4 py-2 rounded-sm text-slate-600 hover:text-slate-900 transition-colors duration-200 text-sm font-medium"
                 >
                   Sign out
                 </button>
               </form>
+              </>
             )}
           </div>
         </div>
