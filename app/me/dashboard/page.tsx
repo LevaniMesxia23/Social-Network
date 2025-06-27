@@ -70,8 +70,9 @@ export default async function DashboardPage() {
             <div className="grid grid-cols-2  gap-4">
               <DrawerDemo />
               {quickActions.map((action, index) => (
-                <button
+                <Link
                   key={index}
+                  href="/me/posts"
                   className="flex flex-col items-center p-4 text-center hover:bg-gray-50 rounded-lg transition-colors duration-200"
                 >
                   <svg
@@ -88,7 +89,7 @@ export default async function DashboardPage() {
                     />
                   </svg>
                   <span className="text-sm text-gray-700">{action.label}</span>
-                </button>
+                </Link>
               ))}
             </div>
           </div>

@@ -11,11 +11,14 @@ export async function getPosts() {
 
 export async function getAuthorPosts(name: string) {
   const supabase = await createServerSupabaseReadOnly();
-  const { data, error } = await supabase.from("posts").select("*").eq("name", name);
+  const { data, error } = await supabase
+    .from("posts")
+    .select("*")
+    .eq("name", name);
   if (error) {
     throw error;
   }
-  return data; 
+  return data;
 }
 
 export async function createPost(post: any) {
