@@ -19,7 +19,10 @@ export async function getUser(userId: string) {
 
 export async function getAllUsers() {
   const supabase = await createServerSupabaseReadOnly();
-  const { data, error } = await supabase.from("users").select("*");
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .order("created_at", { ascending: false });
   if (error) {
     throw error;
   }

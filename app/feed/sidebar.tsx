@@ -4,19 +4,6 @@ import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Users, X } from "lucide-react";
 import UserCard from "./UserCard";
 
-interface User {
-  id: string;
-  email: string;
-  name?: string;
-  created_at: string;
-  isFollowing?: boolean;
-}
-
-interface CollapsibleUserSidebarProps {
-  users: User[];
-  currentUserEmail: string;
-}
-
 export function CollapsibleUserSidebar({
   users,
   currentUserEmail,

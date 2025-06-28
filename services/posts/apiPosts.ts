@@ -25,9 +25,9 @@ export async function getFollowedUsersPosts(currentUserEmail: string) {
     if (usersError || !users) return [];
 
     const followedUserNames = users
-      .filter(user => user.followers?.includes(currentUserEmail))
-      .map(user => user.name)
-      .filter(Boolean); 
+      .filter((user) => user.followers?.includes(currentUserEmail))
+      .map((user) => user.name)
+      .filter(Boolean);
 
     if (followedUserNames.length === 0) return [];
 
