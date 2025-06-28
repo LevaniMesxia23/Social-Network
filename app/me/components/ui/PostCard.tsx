@@ -1,55 +1,94 @@
 "use client";
 
 import Link from "next/link";
-
-interface Post {
-  id: string;
-  title: string;
-  description: string;
-  image?: string;
-  name?: string;
-  created_at: string;
-  tags?: string[];
-  like?: number;
-  commentsCount?: number;
-}
-
-interface PostCardProps {
-  post: Post;
-  showCommentCount?: boolean;
-  isClickable?: boolean;
-}
+import { useEffect, useState } from "react";
+import {
+  getCurrentUser,
+  checkUserLike,
+  togglePostLike,
+} from "@/services/posts/apiPosts";
 
 export default function PostCard({
   post,
   showCommentCount = true,
   isClickable = true,
 }: PostCardProps) {
+  const [liked, setLiked] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const initializeUser = async () => {
+      try {
+        const email = await getCurrentUser();
+        setUserEmail(email);
+
+        if (email) {
+          const isLiked = await checkUserLike(post.id, email);
+          setLiked(isLiked);
+        }
+      } catch (error) {
+        console.error("Error initializing user:", error);
+      }
+    };
+
+    initializeUser();
+  }, [post.id]);
+
+  const handleToggleLike = async () => {
+    if (!userEmail || isLoading) return;
+
+    setIsLoading(true);
+    try {
+      const newLikedState = await togglePostLike(post.id, userEmail, liked);
+      setLiked(newLikedState);
+    } catch (error) {
+      console.error("Error toggling like:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const cardContent = (
     <article
       key={post.id}
-      className={`bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden transition-all duration-200 ${
-        isClickable
-          ? "hover:shadow-md hover:border-slate-300 cursor-pointer"
-          : ""
-      }`}
+      className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden transition-all duration-200"
     >
       {post.image && (
         <div className="relative w-full h-72 overflow-hidden bg-slate-50">
-          <img
-            src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/${post.image}`}
-            alt={post.title}
-            className="w-full h-full object-cover"
-            loading="lazy"
-          />
+          {isClickable ? (
+            <Link href={`/post/${post.id}`} className="block">
+              <img
+                src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/${post.image}`}
+                alt={post.title}
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-200 cursor-pointer"
+                loading="lazy"
+              />
+            </Link>
+          ) : (
+            <img
+              src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/${post.image}`}
+              alt={post.title}
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+          )}
         </div>
       )}
 
       <div className="p-8">
         <header className="mb-6">
-          <h2 className="text-2xl font-semibold text-slate-900 mb-3 leading-tight">
-            {post.title}
-          </h2>
+          {isClickable ? (
+            <Link href={`/post/${post.id}`} className="block">
+              <h2 className="text-2xl font-semibold text-slate-900 mb-3 leading-tight hover:text-blue-600 transition-colors duration-200 cursor-pointer">
+                {post.title}
+              </h2>
+            </Link>
+          ) : (
+            <h2 className="text-2xl font-semibold text-slate-900 mb-3 leading-tight">
+              {post.title}
+            </h2>
+          )}
           <p className="text-slate-700 text-base leading-relaxed line-clamp-3">
             {post.description}
           </p>
@@ -97,23 +136,34 @@ export default function PostCard({
           <footer className="flex items-center justify-between pt-6 border-t border-slate-100">
             <div className="flex items-center space-x-6">
               <button
-                className="flex items-center space-x-2 text-slate-500 hover:text-red-500 transition-colors duration-150 group"
-                aria-label={`Like post (${post.like || 0} likes)`}
-                onClick={(e) => e.stopPropagation()}
+                className={`flex items-center space-x-2 transition-colors duration-150 group ${
+                  liked
+                    ? "text-red-500 hover:text-red-600"
+                    : "text-slate-500 hover:text-red-500"
+                } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+                aria-label={`${liked ? "Unlike" : "Like"} post`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleToggleLike();
+                }}
+                disabled={isLoading || !userEmail}
               >
                 <svg
-                  className="w-5 h-5 group-hover:scale-110 transition-transform duration-150"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
+                  className={`w-5 h-5 group-hover:scale-110 transition-transform duration-150 ${
+                    liked ? "fill-current" : ""
+                  }`}
+                  fill={liked ? "currentColor" : "none"}
+                  stroke="currentColor"
+                  strokeWidth={liked ? 0 : 2}
+                  viewBox="0 0 24 24"
                   aria-hidden="true"
                 >
                   <path
-                    fillRule="evenodd"
-                    d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-                    clipRule="evenodd"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
                   />
                 </svg>
-                <span className="text-sm font-medium">{post.like || 0}</span>
               </button>
 
               <div className="flex items-center space-x-2 text-slate-500">
@@ -154,14 +204,6 @@ export default function PostCard({
       </div>
     </article>
   );
-
-  if (isClickable) {
-    return (
-      <Link href={`/post/${post.id}`} className="block">
-        {cardContent}
-      </Link>
-    );
-  }
 
   return cardContent;
 }

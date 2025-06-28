@@ -1,31 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { addComment } from "./actions";
-
-interface Post {
-  id: string;
-  title: string;
-  description: string;
-  image?: string;
-  name?: string;
-  created_at: string;
-  tags?: string[];
-  like?: number;
-  commentsData?: any[];
-  commentsCount?: number;
-}
-
-interface Comment {
-  id: string;
-  postId: string;
-  comment: string;
-  created_at: string;
-  author?: string;
-}
-
+import {
+  getCurrentUser,
+  checkUserLike,
+  togglePostLike,
+} from "@/services/posts/apiPosts";
+import { Post, Comment } from "./types/types";
 interface SinglePostViewProps {
   post: Post;
   user: User;
@@ -36,6 +20,41 @@ export default function SinglePostView({ post, user }: SinglePostViewProps) {
   const [newComment, setNewComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [liked, setLiked] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [isLikeLoading, setIsLikeLoading] = useState(false);
+
+  useEffect(() => {
+    const initializeUser = async () => {
+      try {
+        const email = await getCurrentUser();
+        setUserEmail(email);
+
+        if (email) {
+          const isLiked = await checkUserLike(post.id, email);
+          setLiked(isLiked);
+        }
+      } catch (error) {
+        console.error("Error initializing user:", error);
+      }
+    };
+
+    initializeUser();
+  }, [post.id]);
+
+  const handleToggleLike = async () => {
+    if (!userEmail || isLikeLoading) return;
+
+    setIsLikeLoading(true);
+    try {
+      const newLikedState = await togglePostLike(post.id, userEmail, liked);
+      setLiked(newLikedState);
+    } catch (error) {
+      console.error("Error toggling like:", error);
+    } finally {
+      setIsLikeLoading(false);
+    }
+  };
 
   const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -152,20 +171,33 @@ export default function SinglePostView({ post, user }: SinglePostViewProps) {
                 )}
 
               <footer className="flex items-center space-x-6 pt-6 border-t border-slate-100">
-                <div className="flex items-center space-x-2 text-slate-500">
+                <button
+                  className={`flex items-center space-x-2 transition-colors duration-150 group ${
+                    liked
+                      ? "text-red-500 hover:text-red-600"
+                      : "text-slate-500 hover:text-red-500"
+                  } ${isLikeLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+                  aria-label={`${liked ? "Unlike" : "Like"} post`}
+                  onClick={handleToggleLike}
+                  disabled={isLikeLoading || !userEmail}
+                >
                   <svg
-                    className="w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
+                    className={`w-5 h-5 group-hover:scale-110 transition-transform duration-150 ${
+                      liked ? "fill-current" : ""
+                    }`}
+                    fill={liked ? "currentColor" : "none"}
+                    stroke="currentColor"
+                    strokeWidth={liked ? 0 : 2}
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
                   >
                     <path
-                      fillRule="evenodd"
-                      d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-                      clipRule="evenodd"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
                     />
                   </svg>
-                  <span className="text-sm font-medium">{post.like || 0}</span>
-                </div>
+                </button>
 
                 <div className="flex items-center space-x-2 text-slate-500">
                   <svg
@@ -211,7 +243,7 @@ export default function SinglePostView({ post, user }: SinglePostViewProps) {
               {isSubmitting ? "Posting..." : "Post Comment"}
             </button>
           </form>
-  
+
           <div className="space-y-6">
             {comments.length === 0 ? (
               <div className="text-center py-8">
