@@ -9,9 +9,7 @@ export default async function MeLayout({
 }) {
   return (
     <RouteProtection protectFrom="unauthenticated">
-      <div>
-        {children}
-      </div>
+      <div>{children}</div>
     </RouteProtection>
   );
 }

@@ -3,7 +3,10 @@ import { deleteComments } from "@/services/comments/apiComments";
 
 export async function getPosts() {
   const supabase = await createServerSupabaseReadOnly();
-  const { data, error } = await supabase.from("posts").select("*");
+  const { data, error } = await supabase
+    .from("posts")
+    .select("*")
+    .order("created_at", { ascending: false });
   if (error) {
     throw error;
   }
