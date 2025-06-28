@@ -4,7 +4,7 @@ import PostCard from "@/app/me/components/ui/PostCard";
 import { getAllUsers, checkIfFollowing } from "@/services/users/apiUsers";
 import { createServerSupabaseReadOnly } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import UserCard from "./UserCard";
+import { CollapsibleUserSidebar, MobileSidebarTrigger } from "./sidebar";
 
 interface User {
   id: string;
@@ -12,60 +12,6 @@ interface User {
   name?: string;
   created_at: string;
   followers?: string[];
-}
-
-function UsersSidebar({
-  users,
-  currentUserEmail,
-}: {
-  users: User[];
-  currentUserEmail: string;
-}) {
-  return (
-    <aside className="w-80 bg-slate-50 border-r border-slate-200">
-      <div className="sticky top-0 h-screen overflow-y-auto p-6">
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold text-slate-900 mb-2">
-            Community Members
-          </h2>
-          <p className="text-sm text-slate-600">
-            {users.length} active {users.length === 1 ? "member" : "members"}
-          </p>
-        </div>
-
-        <div className="space-y-3">
-          {users.map((user) => (
-            <UserCard
-              key={user.id}
-              user={user}
-              currentUserEmail={currentUserEmail}
-            />
-          ))}
-        </div>
-
-        {users.length === 0 && (
-          <div className="text-center py-8">
-            <div className="w-12 h-12 mx-auto mb-3 bg-slate-100 rounded-full flex items-center justify-center">
-              <svg
-                className="w-6 h-6 text-slate-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
-                />
-              </svg>
-            </div>
-            <p className="text-sm text-slate-500">No members found</p>
-          </div>
-        )}
-      </div>
-    </aside>
-  );
 }
 
 export default async function FeedPage() {
@@ -132,28 +78,28 @@ export default async function FeedPage() {
 
     return (
       <div className="min-h-screen bg-slate-50 flex">
-        <UsersSidebar
+        <CollapsibleUserSidebar
           users={usersWithFollowStatus}
           currentUserEmail={currentUser.email!}
         />
 
         <main className="flex-1">
-          <div className="container mx-auto max-w-4xl px-6 py-12">
-            <header className="mb-12 text-center">
-              <h1 className="text-4xl font-semibold text-slate-900 mb-4 tracking-tight">
+          <div className="container mx-auto max-w-4xl px-4 sm:px-6 py-6 sm:py-12">
+            <header className="mb-8 sm:mb-12 text-center">
+              <h1 className="text-2xl sm:text-4xl font-semibold text-slate-900 mb-4 tracking-tight">
                 Latest Updates
               </h1>
-              <p className="text-slate-600 text-lg max-w-2xl mx-auto">
+              <p className="text-slate-600 text-base sm:text-lg max-w-2xl mx-auto px-4">
                 Stay informed with curated content and insights from our
                 community
               </p>
             </header>
 
             {posts.length === 0 ? (
-              <div className="text-center py-16">
-                <div className="w-16 h-16 mx-auto mb-4 bg-slate-100 rounded-full flex items-center justify-center">
+              <div className="text-center py-12 sm:py-16">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 bg-slate-100 rounded-full flex items-center justify-center">
                   <svg
-                    className="w-8 h-8 text-slate-400"
+                    className="w-6 h-6 sm:w-8 sm:h-8 text-slate-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -166,20 +112,28 @@ export default async function FeedPage() {
                     />
                   </svg>
                 </div>
-                <h3 className="text-xl font-medium text-slate-900 mb-2">
+                <h3 className="text-lg sm:text-xl font-medium text-slate-900 mb-2">
                   No posts available
                 </h3>
-                <p className="text-slate-500">
+                <p className="text-slate-500 text-sm sm:text-base">
                   Check back later for new content
                 </p>
               </div>
             ) : (
-              <section className="space-y-8" aria-label="Posts feed">
+              <section
+                className="space-y-6 sm:space-y-8 pb-20 sm:pb-8"
+                aria-label="Posts feed"
+              >
                 {postsWithComments.map((post) => (
                   <PostCard key={post.id} post={post} showCommentCount={true} />
                 ))}
               </section>
             )}
+
+            <MobileSidebarTrigger
+              users={usersWithFollowStatus}
+              currentUserEmail={currentUser.email!}
+            />
           </div>
         </main>
       </div>

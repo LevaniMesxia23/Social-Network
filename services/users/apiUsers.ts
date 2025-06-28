@@ -68,7 +68,6 @@ export async function unfollowUser(
 ) {
   const supabase = createClient();
 
-
   const { data: userData, error: fetchError } = await supabase
     .from("users")
     .select("followers")
