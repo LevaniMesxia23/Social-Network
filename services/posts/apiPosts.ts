@@ -14,6 +14,38 @@ export async function getPosts() {
   return data;
 }
 
+export async function getFollowedUsersPosts(currentUserEmail: string) {
+  const supabase = await createServerSupabaseReadOnly();
+
+  try {
+    const { data: users, error: usersError } = await supabase
+      .from("users")
+      .select("name, followers");
+
+    if (usersError || !users) return [];
+
+    const followedUserNames = users
+      .filter(user => user.followers?.includes(currentUserEmail))
+      .map(user => user.name)
+      .filter(Boolean); 
+
+    if (followedUserNames.length === 0) return [];
+
+    const { data: posts, error: postsError } = await supabase
+      .from("posts")
+      .select("*")
+      .in("name", followedUserNames)
+      .order("created_at", { ascending: false });
+
+    if (postsError) return [];
+
+    return posts || [];
+  } catch (error) {
+    console.error("Error in getFollowedUsersPosts:", error);
+    return [];
+  }
+}
+
 export async function getSinglePost(id: string) {
   const supabase = await createServerSupabaseReadOnly();
   const { data, error } = await supabase

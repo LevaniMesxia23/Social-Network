@@ -1,5 +1,5 @@
 import { getComments } from "@/services/comments/apiComments";
-import { getPosts } from "@/services/posts/apiPosts";
+import { getFollowedUsersPosts } from "@/services/posts/apiPosts";
 import PostCard from "@/app/me/components/ui/PostCard";
 import { getAllUsers, checkIfFollowing } from "@/services/users/apiUsers";
 import { createServerSupabaseReadOnly } from "@/utils/supabase/server";
@@ -26,7 +26,7 @@ export default async function FeedPage() {
       redirect("/login");
     }
 
-    const posts = await getPosts();
+    const posts = await getFollowedUsersPosts(currentUser.email!);
     const allUsers = await getAllUsers();
 
     const filteredUsers =
@@ -87,11 +87,10 @@ export default async function FeedPage() {
           <div className="container mx-auto max-w-4xl px-4 sm:px-6 py-6 sm:py-12">
             <header className="mb-8 sm:mb-12 text-center">
               <h1 className="text-2xl sm:text-4xl font-semibold text-slate-900 mb-4 tracking-tight">
-                Latest Updates
+                Your Feed
               </h1>
               <p className="text-slate-600 text-base sm:text-lg max-w-2xl mx-auto px-4">
-                Stay informed with curated content and insights from our
-                community
+                Stay updated with posts from people you follow
               </p>
             </header>
 
@@ -108,15 +107,15 @@ export default async function FeedPage() {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
                     />
                   </svg>
                 </div>
                 <h3 className="text-lg sm:text-xl font-medium text-slate-900 mb-2">
-                  No posts available
+                  No posts from followed users
                 </h3>
                 <p className="text-slate-500 text-sm sm:text-base">
-                  Check back later for new content
+                  Follow some users from the sidebar to see their posts here
                 </p>
               </div>
             ) : (
