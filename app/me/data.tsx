@@ -91,29 +91,4 @@ export const stats = [
   },
 ];
 
-export const actionCards = [
-  {
-    title: "Dashboard",
-    description: "View your stats and activity",
-    href: "/me/dashboard",
-    icon: dashboardIcon,
-    color: "bg-blue-100",
-    stats: [
-      { label: "Total Posts", value: "24" },
-      { label: "Total Likes", value: "1.2K" },
-      { label: "Followers", value: "456" },
-    ],
-  },
-  {
-    title: "Profile",
-    description: "Edit your personal information",
-    href: "/me/profile",
-    icon: profileIcon,
-    color: "bg-green-100",
-    stats: [
-      { label: "Username", value: "@johndoe" },
-      { label: "Email", value: "john.doe@example.com" },
-      { label: "Member since", value: "Jan 2024" },
-    ],
-  },
-];
+

@@ -31,7 +31,8 @@ export async function getAuthorPosts(name: string) {
   const { data, error } = await supabase
     .from("posts")
     .select("*")
-    .eq("name", name);
+    .eq("name", name)
+    .order("created_at", { ascending: false });
   if (error) {
     throw error;
   }
