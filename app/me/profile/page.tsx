@@ -1,4 +1,3 @@
-import { getUser } from "@/services/users/apiUsers";
 import { createServerSupabaseReadOnly } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { getAuthorPosts } from "@/services/posts/apiPosts";
@@ -14,14 +13,14 @@ import {
 export default async function ProfilePage() {
   const supabase = await createServerSupabaseReadOnly();
   const {
-    data: { user },
+    data: { user, user: currentUser },
   } = await supabase.auth.getUser();
 
   if (!user) {
     redirect("/login");
   }
 
-  const userData = await getUser(user.id);
+
   const postsCount = await getAuthorPosts(
     user.identities?.[0]?.identity_data?.display_name || ""
   );
@@ -43,8 +42,8 @@ export default async function ProfilePage() {
         <ProfileHeader user={user} />
 
         <ProfileStats
+          user={user}
           postsCount={postsCount.length || 0}
-          followersCount={userData[0]?.followers_count || 0}
           memberSince={memberSince}
         />
 
@@ -54,7 +53,6 @@ export default async function ProfilePage() {
 
             <ActivityOverview
               postsCount={postsCount.length || 0}
-              followersCount={userData[0]?.followers_count || 0}
               accountAge={accountAge}
             />
           </div>

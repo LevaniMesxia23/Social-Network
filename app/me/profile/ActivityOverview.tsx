@@ -2,7 +2,6 @@ import { ActivityOverviewProps } from "./types/types";
 
 export default function ActivityOverview({
   postsCount,
-  followersCount,
   accountAge,
 }: ActivityOverviewProps) {
   return (
@@ -38,20 +37,6 @@ export default function ActivityOverview({
           </div>
         </div>
 
-        <div className="border border-gray-200 p-4">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-gray-700 font-medium">Followers</span>
-            <span className="text-gray-900 font-semibold">
-              {followersCount}
-            </span>
-          </div>
-          <div className="w-full bg-gray-200 h-2">
-            <div
-              className="bg-gray-900 h-2"
-              style={{ width: `${Math.min(followersCount * 5, 100)}%` }}
-            ></div>
-          </div>
-        </div>
 
         <div className="border border-gray-200 p-4">
           <div className="flex items-center justify-between mb-3">

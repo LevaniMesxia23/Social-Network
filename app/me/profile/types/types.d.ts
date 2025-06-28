@@ -1,6 +1,5 @@
 export interface ActivityOverviewProps {
   postsCount: number;
-  followersCount: number;
   accountAge: number;
 }
 
@@ -30,6 +29,14 @@ interface ProfileHeaderProps {
 
 interface ProfileStatsProps {
   postsCount: number;
-  followersCount: number;
   memberSince: string;
+  user: {
+    id: string;
+    email?: string;
+    identities?: Array<{
+      identity_data?: {
+        display_name?: string;
+      };
+    }>;
+  };
 }
