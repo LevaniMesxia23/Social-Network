@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { handleFollowUser, handleUnfollowUser } from "@/app/auth/actions";
 
-export default function UserCard({ user, currentUserEmail }: UserCardProps) {
+export default function UserCard({ user }: UserCardProps) {
   const [isFollowing, setIsFollowing] = useState(user.isFollowing || false);
   const [isPending, startTransition] = useTransition();
 

@@ -5,7 +5,7 @@ import { Comment, SinglePostViewProps } from "./types/types";
 import { usePostInteractions } from "./hooks/usePostInteractions";
 import { PostHeader, PostContent, CommentSection } from "./components";
 
-export default function SinglePostView({ post, user }: SinglePostViewProps) {
+export default function SinglePostView({ post }: SinglePostViewProps) {
   const [comments, setComments] = useState<Comment[]>(post.commentsData || []);
 
   const { liked, userEmail, isLikeLoading, handleToggleLike } =

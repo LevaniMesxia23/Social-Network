@@ -13,13 +13,12 @@ import {
 export default async function ProfilePage() {
   const supabase = await createServerSupabaseReadOnly();
   const {
-    data: { user, user: currentUser },
+    data: { user },
   } = await supabase.auth.getUser();
 
   if (!user) {
     redirect("/login");
   }
-
 
   const postsCount = await getAuthorPosts(
     user.identities?.[0]?.identity_data?.display_name || ""

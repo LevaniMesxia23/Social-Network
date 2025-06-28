@@ -6,14 +6,6 @@ import { createServerSupabaseReadOnly } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { CollapsibleUserSidebar, MobileSidebarTrigger } from "./sidebar";
 
-interface User {
-  id: string;
-  email: string;
-  name?: string;
-  created_at: string;
-  followers?: string[];
-}
-
 export default async function FeedPage() {
   try {
     const supabase = await createServerSupabaseReadOnly();

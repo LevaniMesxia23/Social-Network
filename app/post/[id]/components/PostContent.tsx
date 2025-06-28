@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Post } from "../types/types";
 
 interface PostContentProps {
@@ -24,10 +25,13 @@ function getImageUrl(imageName: string): string {
 function PostImage({ image, title }: { image: string; title: string }) {
   return (
     <div className="relative w-full h-96 overflow-hidden bg-slate-50">
-      <img
+      <Image
         src={getImageUrl(image)}
         alt={title}
+        width={800}
+        height={384}
         className="w-full h-full object-cover"
+        priority
       />
     </div>
   );

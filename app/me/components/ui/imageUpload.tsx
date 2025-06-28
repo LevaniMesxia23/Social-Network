@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Upload, X } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 
@@ -46,7 +47,7 @@ export function ImageUpload({
       .toString(36)
       .substring(2)}.${fileExt}`;
 
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
       .from("images")
       .upload(fileName, file);
 
@@ -102,9 +103,11 @@ export function ImageUpload({
         </div>
       ) : (
         <div className="relative">
-          <img
+          <Image
             src={imagePreview}
             alt="Preview"
+            width={400}
+            height={128}
             className="w-full h-32 object-cover rounded-lg"
           />
           <button

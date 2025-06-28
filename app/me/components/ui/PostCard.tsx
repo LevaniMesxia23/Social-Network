@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import {
   getCurrentUser,
@@ -58,19 +59,23 @@ export default function PostCard({
         <div className="relative w-full h-72 overflow-hidden bg-slate-50">
           {isClickable ? (
             <Link href={`/post/${post.id}`} className="block">
-              <img
+              <Image
                 src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/${post.image}`}
                 alt={post.title}
+                width={800}
+                height={288}
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-200 cursor-pointer"
-                loading="lazy"
+                priority={false}
               />
             </Link>
           ) : (
-            <img
+            <Image
               src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/${post.image}`}
               alt={post.title}
+              width={800}
+              height={288}
               className="w-full h-full object-cover"
-              loading="lazy"
+              priority={false}
             />
           )}
         </div>

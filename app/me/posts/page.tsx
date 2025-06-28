@@ -6,6 +6,14 @@ import { createClient } from "@/utils/supabase/client";
 import PostCard from "@/app/me/components/ui/PostCard";
 import { deletePost } from "@/services/posts/apiPosts";
 import { getComments } from "@/services/comments/apiComments";
+import { User } from "@supabase/supabase-js";
+
+interface Comment {
+  id: string;
+  content: string;
+  author: string;
+  created_at: string;
+}
 
 interface Post {
   id: string;
@@ -16,13 +24,13 @@ interface Post {
   created_at: string;
   tags?: string[];
   like?: number;
-  commentsData?: any[];
+  commentsData?: Comment[];
   commentsCount?: number;
 }
 
 function AuthorPostsPage() {
   const [posts, setPosts] = useState<Post[]>([]);
-  const [user, setUser] = useState<any>(null);
+  const [, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

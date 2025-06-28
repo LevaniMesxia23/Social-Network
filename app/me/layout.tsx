@@ -1,5 +1,4 @@
 import React from "react";
-import Header from "../layouts/Header";
 import RouteProtection from "@/app/_components/RouteProtection";
 
 export default async function MeLayout({
